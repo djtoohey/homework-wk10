@@ -9,6 +9,7 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const { captureRejectionSymbol } = require("events");
 
 const employees = [];
 
@@ -49,8 +50,104 @@ function init() {
     })
 }
 
+const teamQuestions = [
+    {
+        name: "confirm",
+        type: "list",
+        message: "Add an employee: (or select Finished if done adding employees) ",
+        choices: [
+            "Engineer",
+            "Intern",
+            "Finished"
+        ]
+    }
+]
+
 function createTeam() {
-    console.log("continue team")
+    inquirer.prompt(teamQuestions).then(function ({ confirm }) {
+        if (confirm === "Engineer") {
+            createEngineer();
+        }
+        else if (confirm === "Intern") {
+            createIntern();
+        }
+        else {
+            finishTeam();
+        }
+    })
+}
+
+const engiQuestions = [
+    {
+        name: "name",
+        type: "input",
+        message: "Engineer's Name: ",
+    },
+    {
+        name: "id",
+        type: "input",
+        message: "Engineer's ID: ",
+    },
+    {
+        name: "email",
+        type: "input",
+        message: "Engineer's email: ",
+    },
+    {
+        name: "github",
+        type: "input",
+        message: "Github account: ",
+
+    }
+]
+
+function createEngineer() {
+    inquirer.prompt(engiQuestions).then(function ({ name, id, email, github }) {
+        const engi = new Engineer(name, id, email, github);
+
+        employees.push(engi);
+
+        createTeam();
+    })
+}
+
+const internQuestions = [
+
+    {
+        name: "name",
+        type: "input",
+        message: "Intern's Name: ",
+    },
+    {
+        name: "id",
+        type: "input",
+        message: "Intern's ID: ",
+    },
+    {
+        name: "email",
+        type: "input",
+        message: "Intern's email: ",
+    },
+    {
+        name: "school",
+        type: "input",
+        message: "School: ",
+
+    }
+
+]
+function createIntern() {
+    inquirer.prompt(internQuestions).then(function ({ name, id, email, school }) {
+        const intern = new Intern(name, id, email, school);
+
+        employees.push(intern);
+
+        createTeam();
+    })
+}
+
+function finishTeam() {
+    console.log(employees);
 }
 
 init();
