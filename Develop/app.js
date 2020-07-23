@@ -134,7 +134,6 @@ const internQuestions = [
         message: "School: ",
 
     }
-
 ]
 function createIntern() {
     inquirer.prompt(internQuestions).then(function ({ name, id, email, school }) {
@@ -147,9 +146,14 @@ function createIntern() {
 }
 
 function finishTeam() {
-    console.log(employees);
-}
+    const htmlData = render(employees);
 
+    fs.writeFile(outputPath, (htmlData), (err) => {
+        if (err) throw err;
+        console.log("Ctrl + click -> output/team.html to see your file!");
+
+    })
+}
 init();
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
